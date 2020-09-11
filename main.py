@@ -1,4 +1,5 @@
-# import json
+import json
+import re
 # import requests
 
 from tornado.httpserver import HTTPServer
@@ -6,6 +7,7 @@ from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application
 from tornado import web
 from tornado.options import define, options, parse_command_line
+from tornado.httputil import parse_body_arguments
 
 url_template = "http://localhost:8000/records/%i"
 
@@ -25,8 +27,11 @@ class healthCheck(web.RequestHandler):
 
 class storeRecords(web.RequestHandler):
     def post(self):
-        body = self.get_argument('data')
-        self.write({'message': 'store my record'})
+        self.set_header('Content-Type', 'application/json; charset=UTF-8')
+        data = re.sub(r'\s+', '\n', self.request.body.decode('utf-8'))
+        # self.write(data.split("\n"))
+        with open('/tmp/words.txt', 'w') as f:
+            f.writelines(data)
 
 class getRecord(web.RequestHandler):
     @web.asynchronous
@@ -39,14 +44,14 @@ class getRecord(web.RequestHandler):
 def makeApp():
     urls = [('/healthcheck', healthCheck),
             ('/words', storeRecords),
-            ('/record/word',getRecord)]
+            ('/words/word',getRecord)]
     
     return web.Application(urls)
 
 if __name__ == '__main__':
     app = web.Application([('/healthcheck', healthCheck),
            ('/records', storeRecords),
-           ('/record/word',getRecord)])
+           ('/words/',getRecord)])
     httpServer = HTTPServer(app)
     httpServer.listen(8000)
     IOLoop.instance().start()
