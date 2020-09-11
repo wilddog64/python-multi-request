@@ -33,7 +33,7 @@ class storeRecords(web.RequestHandler):
         with open('/tmp/words.txt', 'w') as f:
             f.writelines(data)
 
-class getRecord(web.RequestHandler):
+class getWords(web.RequestHandler):
     @web.asynchronous
     def get(self):
         self.write({'message': 'passed'})
@@ -44,7 +44,7 @@ class getRecord(web.RequestHandler):
 def makeApp():
     urls = [('/healthcheck', healthCheck),
             ('/words', storeRecords),
-            ('/words/word',getRecord)]
+            (r'/words/(\w+)',getWords)]
     
     return web.Application(urls)
 
