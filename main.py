@@ -40,14 +40,6 @@ class getWords(web.RequestHandler):
         loop = IOLoop.instance()
         loop.add_timeout(loop.time() + 0.1, self.finish)
 
-
-def makeApp():
-    urls = [('/healthcheck', healthCheck),
-            ('/words', storeRecords),
-            (r'/words/(\w+)',getWords)]
-    
-    return web.Application(urls)
-
 if __name__ == '__main__':
     app = web.Application([('/healthcheck', healthCheck),
            ('/records', storeRecords),
