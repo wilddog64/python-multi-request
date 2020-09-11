@@ -25,16 +25,20 @@ class healthCheck(web.RequestHandler):
 
 class storeRecords(web.RequestHandler):
     def post(self):
-        pass
+        body = self.get_argument('data')
+        self.write({'message': 'store my record'})
 
 class getRecord(web.RequestHandler):
     @web.asynchronous
-    def get(self, arg):
-        pass
+    def get(self):
+        self.write({'message': 'passed'})
+        loop = IOLoop.instance()
+        loop.add_timeout(loop.time() + 0.1, self.finish)
+
 
 def makeApp():
     urls = [('/healthcheck', healthCheck),
-            ('/records', storeRecords),
+            ('/words', storeRecords),
             ('/record/word',getRecord)]
     
     return web.Application(urls)
