@@ -35,15 +35,28 @@ class storeRecords(web.RequestHandler):
 
 class getWords(web.RequestHandler):
     @web.asynchronous
-    def get(self):
-        self.write({'message': 'passed'})
+    def get(self, target):
+        words = {}
+        with open('/tmp/words.txt', 'r') as f:
+            index = 1
+            for line in f:
+                word = line.strip()
+                words[word] = index
+                index += 1
+
+        index, word = 0, ''
+        if target in words:
+            self.write(json.dumps(dict(index=words[target], word=target)))
+        else:
+            self.write(json.dumps(dict(status='not found')))
+
         loop = IOLoop.instance()
         loop.add_timeout(loop.time() + 0.1, self.finish)
 
 if __name__ == '__main__':
     app = web.Application([('/healthcheck', healthCheck),
            ('/records', storeRecords),
-           ('/words/',getRecord)])
+           (r'/words/(\w+)',getWords)])
     httpServer = HTTPServer(app)
     httpServer.listen(8000)
     IOLoop.instance().start()
