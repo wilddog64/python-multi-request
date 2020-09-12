@@ -50,6 +50,8 @@ class getWords(web.RequestHandler):
         # to make a unique REST url, we add target as a parameter for get method. This each word in our
         # file becomes http://localhost:8000/words/<a word>
 
+        # words an array, and we want to access it outside of current scope
+        # this allow us to cache the content without re-read it every time
         global words
         if len(words) == 0:
             with open('/tmp/words.txt', 'r') as f:
