@@ -33,6 +33,3 @@ clean: stop-container ## remove docker container
 
 %:
 	@echo "ignoring rule $@" >/dev/null
-
-.PHONY: default help init plan apply output workspace
-
