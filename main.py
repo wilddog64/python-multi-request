@@ -38,13 +38,14 @@ class storeRecords(web.RequestHandler):
 
 words = []
 with open('/tmp/words.txt', 'r') as f:
-    words.append(line.strip())
+    for line in f:
+        words.append(line.strip())
 
 # the getWord class will generate an unique RESTful url and return the data. The get method
 # it provided is an asynchron
 class getWords(web.RequestHandler):
     @web.asynchronous
-    def get(self, target):
+    def get(self, arg):
         # we make get as an asynchronus method, which means the method can accept multiple
         # request. But it won't flush the buffer. We have to call finsh manually. To support
         # asynchronus, we use IOLoop, set the callback to finish method
@@ -52,23 +53,8 @@ class getWords(web.RequestHandler):
         # to make a unique REST url, we add target as a parameter for get method. This each word in our
         # file becomes http://localhost:8000/words/<a word>
 
-
-        # create a dictionary object, and load all the words within a file into it
-        words = {}
-        with open('/tmp/words.txt', 'r') as f:
-            index = 1
-            for line in f:
-                word = line.strip()
-                words[word] = index
-                index += 1
-
-        # if target is found report word and its index as json blob
-        # otherwise report status 'not found'
-        index, word = 0, ''
-        if target in words:
-            self.write(json.dumps(dict(index=words[target], word=target)))
-        else:
-            self.write(json.dumps(dict(status='not found')))
+        index = int(arg)
+        self.write(json.dumps(dict(index=index, word=words[index])))
 
         # make this web method become async, and call finish method when timeout
         loop = IOLoop.instance()
@@ -78,7 +64,7 @@ if __name__ == '__main__':
     # create our simple REST server
     app = web.Application([('/healthcheck', healthCheck),
            ('/records', storeRecords),
-           (r'/words/(\w+)',getWords)])
+           (r'/words/(\d+)',getWords)])
     httpServer = HTTPServer(app)
     httpServer.listen(8000)
     IOLoop.instance().start()
