@@ -21,10 +21,13 @@ url_template = "http://localhost:8000/records/%i"
 # define('port', default=8000, help='enable http service run on a particular port, default is 8000', type=int)
 # define('delay', default=0.1, help='a delay for GET requests', type=float)
 
+# the healCheck class provide a simple message telling people we are live
 class healthCheck(web.RequestHandler):
     def get(self):
         self.write({'message': 'yay, you reach me!!'})
 
+# this storeRecords class has one post method that can accept a post data from web and
+# store the upload data in a localhost /tmp directory.
 class storeRecords(web.RequestHandler):
     def post(self):
         self.set_header('Content-Type', 'application/json; charset=UTF-8')
@@ -33,9 +36,20 @@ class storeRecords(web.RequestHandler):
         with open('/tmp/words.txt', 'w') as f:
             f.writelines(data)
 
+# the getWord class will generate an unique RESTful url and return the data. The get method
+# it provided is an asynchron
 class getWords(web.RequestHandler):
     @web.asynchronous
     def get(self, target):
+        # we make get as an asynchronus method, which means the method can accept multiple
+        # request. But it won't flush the buffer. We have to call finsh manually. To support
+        # asynchronus, we use IOLoop, set the callback to finish method
+
+        # to make a unique REST url, we add target as a parameter for get method. This each word in our
+        # file becomes http://localhost:8000/words/<a word>
+
+
+        # create a dictionary object, and load all the words within a file into it
         words = {}
         with open('/tmp/words.txt', 'r') as f:
             index = 1
@@ -44,16 +58,20 @@ class getWords(web.RequestHandler):
                 words[word] = index
                 index += 1
 
+        # if target is found report word and its index as json blob
+        # otherwise report status 'not found'
         index, word = 0, ''
         if target in words:
             self.write(json.dumps(dict(index=words[target], word=target)))
         else:
             self.write(json.dumps(dict(status='not found')))
 
+        # make this web method become async, and call finish method when timeout
         loop = IOLoop.instance()
         loop.add_timeout(loop.time() + 0.1, self.finish)
 
 if __name__ == '__main__':
+    # create our simple REST server
     app = web.Application([('/healthcheck', healthCheck),
            ('/records', storeRecords),
            (r'/words/(\w+)',getWords)])
