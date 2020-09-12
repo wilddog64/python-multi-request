@@ -69,7 +69,6 @@ if __name__ == '__main__':
     # create our simple REST server
     app = web.Application([('/healthcheck', healthCheck),
            ('/records', storeRecords),
-    # nList = [1, 2, 4, 8, 16, 32, 64]
            (r'/words/(\d+)',getWords)])
     httpServer = HTTPServer(app)
     httpServer.listen(8000)
