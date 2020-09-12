@@ -36,6 +36,10 @@ class storeRecords(web.RequestHandler):
         with open('/tmp/words.txt', 'w') as f:
             f.writelines(data)
 
+words = []
+with open('/tmp/words.txt', 'r') as f:
+    words.append(line.strip())
+
 # the getWord class will generate an unique RESTful url and return the data. The get method
 # it provided is an asynchron
 class getWords(web.RequestHandler):
