@@ -2,7 +2,7 @@ import requests
 from threading import Thread
 
 def process_id(id):
-    url = 'http://localhost:8000/words/%i'
+    url = 'http://localhost/words/%i'
     r = requests.get(url % id)
     data = r.json()
     return data
