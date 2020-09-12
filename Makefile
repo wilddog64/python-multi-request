@@ -11,9 +11,9 @@ docker-build: ## build a docker container
 	@docker build -t python-rest .
 
 docker-run: ## build a docker container
-	@ docker run -d -p 80:8000 python-rest
+	@docker run -d -p 80:8000 python-rest
 
-check-port80: ## check port 80 to ensure service is running
+check-port80:  ## check port 80
 	@nc -vzw3 localhost 80
 
 healthcheck: ## run health check
