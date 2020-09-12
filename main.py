@@ -37,9 +37,6 @@ class storeRecords(web.RequestHandler):
             f.writelines(data)
 
 words = []
-with open('/tmp/words.txt', 'r') as f:
-    for line in f:
-        words.append(line.strip())
 
 # the getWord class will generate an unique RESTful url and return the data. The get method
 # it provided is an asynchron
@@ -53,6 +50,12 @@ class getWords(web.RequestHandler):
         # to make a unique REST url, we add target as a parameter for get method. This each word in our
         # file becomes http://localhost:8000/words/<a word>
 
+        global words
+        if len(words) == 0:
+            with open('/tmp/words.txt', 'r') as f:
+                for line in f:
+                    words.append(line.strip())
+
         index = int(arg)
         self.write(json.dumps(dict(index=index, word=words[index])))
 
@@ -64,6 +67,7 @@ if __name__ == '__main__':
     # create our simple REST server
     app = web.Application([('/healthcheck', healthCheck),
            ('/records', storeRecords),
+    # nList = [1, 2, 4, 8, 16, 32, 64]
            (r'/words/(\d+)',getWords)])
     httpServer = HTTPServer(app)
     httpServer.listen(8000)
