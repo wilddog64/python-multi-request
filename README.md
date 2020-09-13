@@ -32,7 +32,7 @@ run `make` command, and it will print out the help message like this,
 These two commands will build and run a docker container in your system. Be sure you don't run `make docker-run` multiple times as each run
 will bring up a new container into your system and will failed. This is because only one port 80 can exist for a given system
 
-### check-port80 and health check
+### make check-port80 and health check
 
 * make check-port80 use `nc` to check port 80 for a given system. This ensure service is listening (this one does not show when you run make without parameters)
 * make healcheck use curl to hit api endpoint http://localhost/healthcheck to ensure server is functioning
