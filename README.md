@@ -11,6 +11,7 @@ to install the following tools,
 * python >= 3.7 - the python code is written and in python3, make sure you have proper python interpreter installed on your system
 ** python requests library - this is required for submitting multiple requests to the api server. You can run `pip install requests`
 * nc (netcat) - check to see if a given port is listening
+* curl - a utility for interact with api server
 
 ## running a container and submitting requests
 
