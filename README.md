@@ -29,8 +29,8 @@ run `make` command, and it will print out the help message like this,
 
 ### make docker-build and make docker-run
 
-These two commands will build and run a docker container in your system. Be sure you don't run `make docker-run` multiple times as each run
-will bring up a new container into your system and will failed. This is because only one port 80 can exist for a given system
+* make docker-build builds a docker container
+* make docker-run runs a docker container
 
 ### make check-port80 and health check
 
