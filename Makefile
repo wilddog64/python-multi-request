@@ -5,12 +5,12 @@ check-var = $(if $(strip $($1)),,$(error var for "$1" is empty))
 default: help
 
 help:
-	@awk 'BEGIN {FS = ":.*?## "} /^[\/a-zA-Z_-]+:.*?## / {sub("\\\\n",sprintf("\n%22c"," "), $$2);printf "\033[36m \033[0m%-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@gawk 'BEGIN {FS= ":.*?## "} /^\S+:(.*)?##/ { printf "  %-20s\t%-20s\n", $$1, $$2}' ${MAKEFILE_LIST}
 
 docker-build: ## build a docker container
 	@docker build -t python-rest .
 
-docker-run: ## build a docker container
+docker-run: ## run a docker container
 	@docker run -d -p 80:8000 python-rest
 
 check-port80:  ## check port 80
