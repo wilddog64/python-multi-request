@@ -38,6 +38,7 @@ class requestHandlerBase(web.RequestHandler):
     # connect to database
     def db_connect(self, conn, db_path=self._DEFAULT_PATH):
         self.conn = sqlite3.connect(db_path)
+        self.conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(cursor.description)])
 
     def create_word_table(self):
 
