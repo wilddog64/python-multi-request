@@ -29,52 +29,86 @@ class healthCheck(web.RequestHandler):
     def get(self):
         self.write({'message': 'yay, you reach me!!'})
 
-# this storeRecords class has one post method that can accept a post data from web and
-# store the upload data in a localhost /tmp directory.
-class storeRecords(web.RequestHandler):
+class requestHandlerBase(web.RequestHandler):
     self._DEFAULT_PATH = os.path.join(os.path.realpath(''), 'db.sqlite')
-    def post(self):
-        # data = re.sub(r'\s+', '\n', self.request.body.decode('utf-8'))
-        self._data = self.request.body.decode('utf-8').split(' ')
-        self._conn = self._db_connect()
-        self._create_word_table()
-
-        # self.write(data.split("\n"))
-        with open('/tmp/words.txt', 'w') as f:
-            f.writelines(data)
+    self._data = None
+    self._conn = None
+    self._cursor = None
 
     # connect to database
-    def _db_connect(self, conn, db_path=self._DEFAULT_PATH):
-        conn = sqlite3.connect(db_path)
-        return conn
+    def db_connect(self, conn, db_path=self._DEFAULT_PATH):
+        self.conn = sqlite3.connect(db_path)
 
-    def _create_word_table(self):
+    def create_word_table(self):
 
         # create table
         create_stmt = ```
         CREATE TABLE IF NOT EXISTS words(id int, word text)
         ```
-        cursor = self._conn.cursor()
-        cursor.execute(create_stmt)
+        self.cursor = self._conn.cursor()
+        self.cursor.execute(create_stmt)
 
-    def _insert_data(self):
+    def insert_data(self):
         insert_stmt = 'INSERT INTO words (word) VALUES (?)'
-        cursor = self._conn.cursor()
+        self.cursor = self._conn.cursor()
 
         try:
           for r in data:
-              cursor.execute(insert_stmt, r)
+              self._cursor.execute(insert_stmt, r)
           self._conn.commit()
         except:
             self._conn.rollback()
             raise RuntimeError('fail to insert data')
+
+    def get_word(self, id):
+        select_stmt = 'SELECT id, word FROM words WHERE id = (?)'
+
+        cursor = self.cursor
+        cursor.execute(select_stmt, id)
+        result = cursor.fetchone()
+
+        return result
+
+    @property
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        self._data = value
+
+    @property
+    def conn(self):
+        return self._conn
+
+    @conn.setter
+    def conn(self, value):
+        self._conn = value
+
+    @property
+    def cursor(self):
+        return self._cursor
+
+    @cursor.setter
+    def cursor(self, value):
+        self._cursor = value
+
+# this storeRecords class has one post method that can accept a post data from web and
+# store the upload data in a localhost /tmp directory.
+class storeRecords(web.RequestHandlerBase):
+    def post(self):
+        # data = re.sub(r'\s+', '\n', self.request.body.decode('utf-8'))
+        self.data = self.request.body.decode('utf-8').split(' ')
+        self.db_connect()
+        self.create_word_table()
+        self.insert_data
 
 
 words = []
 
 # the getWord class will generate an unique RESTful url and return the data. The get method
 # it provided is an asynchron
-class getWords(web.RequestHandler):
+class getWords(web.RequestHandlerBase):
     @web.asynchronous
     def get(self, arg):
         # we make get as an asynchronus method, which means the method can accept multiple
