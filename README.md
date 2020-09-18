@@ -35,7 +35,7 @@ run `make` command, and it will print out the help message like this,
 ### make check-port80 and health check
 
 * make check-port80 use `nc` to check port 80 for a given system. This ensure service is listening (this one does not show when you run make without parameters)
-* make healcheck use curl to hit api endpoint http://localhost/healthcheck to ensure server is functioning
+* make healthcheck use curl to hit api endpoint http://localhost/healthcheck to ensure server is functioning
 
 ### make upload-data and make run-test
 
