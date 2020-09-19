@@ -30,6 +30,10 @@ class healthCheck(web.RequestHandler):
         self.write({'message': 'yay, you reach me!!'})
 
 class Application(web.Application):
+    '''
+    the custom Application class is a sub-class of web.Application. Mainly uses
+    to wrap methods for accessing sqlite database
+    '''
     def __init__(self, *args, **kwargs):
         super(Application, self).__init__(*args, **kwargs)
         self._data = None
@@ -46,16 +50,23 @@ class Application(web.Application):
         if self._conn is None:
             self._conn = sqlite3.connect(db_path)
 
+        # use a lambda function to convert a tuple into a hash
         self._conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
 
     def create_word_table(self):
-
+        '''
+        create a table in an sqlite database
+        '''
         # create table
         create_stmt = 'CREATE TABLE IF NOT EXISTS words(id integer primary key autoincrement, word text)'
         self._cursor = self._conn.cursor()
         self._cursor.execute(create_stmt)
 
     def insert_data(self, data):
+        '''
+        insert_data inserts data into sqlite3 database table. It wraps all inserts
+        into a transition. When fail the whole inserts are rollback.
+        '''
         insert_stmt = 'INSERT INTO words (word) VALUES (?)'
         self._cursor = self._conn.cursor()
 
@@ -68,6 +79,9 @@ class Application(web.Application):
             raise RuntimeError('fail to insert data')
 
     def get_word(self, idx):
+        '''
+        get_word - return a record base on id
+        '''
         select_stmt = 'SELECT id, word FROM words WHERE id = (?)'
 
         self.db_connect()
@@ -97,7 +111,7 @@ class getWords(web.RequestHandler):
         # asynchronus, we use IOLoop, set the callback to finish method
 
         # to make a unique REST url, we add target as a parameter for get method. This each word in our
-        # file becomes http://localhost:8000/words/<a word>
+        # file becomes http://localhost:8000/words/<id>
 
         index = int(arg)
         word = self.application.get_word(index)
