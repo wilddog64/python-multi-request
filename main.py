@@ -33,6 +33,9 @@ class Application(web.Application):
 
     # connect to database
     def db_connect(self, conn=None, db_path=None):
+        '''
+        db_connect creates sqlite connection object
+        '''
 
         if db_path is None:
             db_path = self._DEFAULT_PATH
@@ -96,12 +99,14 @@ class storeRecords(web.RequestHandler):
 class getWords(web.RequestHandler):
     @web.asynchronous
     def get(self, arg):
-        # we make get as an asynchronus method, which means the method can accept multiple
-        # request. But it won't flush the buffer. We have to call finsh manually. To support
-        # asynchronus, we use IOLoop, set the callback to finish method
+        '''
+        we make get as an asynchronus method, which means the method can accept multiple
+        request. But it won't flush the buffer. We have to call finsh manually. To support
+        asynchronus, we use IOLoop, set the callback to finish method
 
-        # to make a unique REST url, we add target as a parameter for get method. This each word in our
-        # file becomes http://localhost:8000/words/<id>
+        to make a unique REST url, we add target as a parameter for get method. This each word in our
+        file becomes http://localhost:8000/words/<id>
+        '''
 
         index = int(arg)
         word = self.application.get_word(index)
