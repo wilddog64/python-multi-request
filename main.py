@@ -52,12 +52,12 @@ class Application(web.Application):
 
         # create table
         create_stmt = 'CREATE TABLE IF NOT EXISTS words(id integer primary key autoincrement, word text)'
-        self.cursor = self._conn.cursor()
-        self.cursor.execute(create_stmt)
+        self._cursor = self._conn.cursor()
+        self._cursor.execute(create_stmt)
 
     def insert_data(self, data):
         insert_stmt = 'INSERT INTO words (word) VALUES (?)'
-        self.cursor = self._conn.cursor()
+        self._cursor = self._conn.cursor()
 
         try:
           for r in data:
@@ -76,30 +76,6 @@ class Application(web.Application):
         row = cursor.fetchone()
 
         return row
-
-    @property
-    def data(self):
-        return self._data
-
-    @data.setter
-    def data(self, value):
-        self._data = value
-
-    @property
-    def conn(self):
-        return self._conn
-
-    @conn.setter
-    def conn(self, value):
-        self._conn = value
-
-    @property
-    def cursor(self):
-        return self._cursor
-
-    @cursor.setter
-    def cursor(self, value):
-        self._cursor = value
 
 # this storeRecords class has one post method that can accept a post data from web and
 # store the upload data in a localhost /tmp directory.
