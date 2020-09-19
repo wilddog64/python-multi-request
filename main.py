@@ -14,16 +14,6 @@ from tornado.httputil import parse_body_arguments
 
 url_template = "http://localhost:8000/records/%i"
 
-# process_id is a function to process a single id at a time
-# def process_id(id):
-#     r = requests.get(url_template % id)
-#     data = r.json()
-#     requests.put(url_template % id, data=data)
-#     return data
-
-# define('port', default=8000, help='enable http service run on a particular port, default is 8000', type=int)
-# define('delay', default=0.1, help='a delay for GET requests', type=float)
-
 # the healCheck class provide a simple message telling people we are live
 class healthCheck(web.RequestHandler):
     def get(self):
