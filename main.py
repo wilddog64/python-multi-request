@@ -7,7 +7,6 @@ import sqlite3
 
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from tornado.web import RequestHandler, Application
 from tornado import web
 from tornado.options import define, options, parse_command_line
 from tornado.httputil import parse_body_arguments
@@ -79,7 +78,7 @@ class Application(web.Application):
 
         self.db_connect()
         cursor = self._conn.cursor()
-        cursor.execute(select_stmt, str(idx))
+        cursor.execute(select_stmt, (str(idx),))
         row = cursor.fetchone()
 
         return row
