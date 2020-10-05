@@ -8,8 +8,6 @@ import sqlite3
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado import web
-from tornado.options import define, options, parse_command_line
-from tornado.httputil import parse_body_arguments
 
 url_template = "http://localhost:8000/records/%i"
 
