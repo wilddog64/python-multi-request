@@ -1,4 +1,3 @@
 requests
 tornado==5.1.1
-tornado-sqlalchemy
 sqlite3-api
