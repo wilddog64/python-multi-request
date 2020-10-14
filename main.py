@@ -9,7 +9,7 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado import web
 
-url_template = "http://localhost:8000/records/%i"
+url_template = "http://localhost/records/%i"
 
 # the healCheck class provide a simple message telling people we are live
 class healthCheck(web.RequestHandler):
