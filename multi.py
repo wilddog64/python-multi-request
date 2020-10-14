@@ -2,7 +2,7 @@ import requests
 from threading import Thread
 
 def process_id(id):
-    url = 'http://localhost:8000/words/%i'
+    url = 'http://localhost/words/%i'
     r = requests.get(url % id)
     data = r.json()
     return data
@@ -34,8 +34,8 @@ def threaded_processing(nThreads, id_range):
     return store
 
 if __name__ == '__main__':
-    id_range = range(1000)
-    threaded_processing(32, id_range)
+    id_range = range(5000)
+    threaded_processing(64, id_range)
     # nList = [1, 2, 4, 8, 16, 32, 64]
     # for nThreads in nList[1:]:
     #     ans = threaded_processing(nThreads, id_range)
