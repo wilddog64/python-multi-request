@@ -5,7 +5,7 @@ check-var = $(if $(strip $($1)),,$(error var for "$1" is empty))
 default: help
 
 help:
-	@gawk 'BEGIN {FS= ":.*?## "} /^\S+:(.*)?##/ { printf "  %-20s\t%-20s\n", $$1, $$2}' ${MAKEFILE_LIST}
+	@awk 'BEGIN {FS= ":.*?## "} /^\S+:(.*)?##/ { printf "  %-20s\t%-20s\n", $$1, $$2}' ${MAKEFILE_LIST}
 
 docker-build: ## build a docker container
 	@docker build -t python-rest .
