@@ -15,7 +15,7 @@ to install the following tools,
 
 ## running a container and submitting requests
 
-We parepare a Makefile to simply the process of building and running the docker container. Cd into `multi-url-request` dirctory, and
+We parepare a Makefile to simplify the process of building and running the docker container. cd into `multi-url-request` dirctory, and
 run `make` command, and it will print out the help message like this,
 
     docker-build     build a docker container
