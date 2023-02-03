@@ -8,10 +8,10 @@ help:
 	@perl -nle 'printf "  %-20s\t%-20s\n", $$1, $$2 if /(^\S+?:) ## (.*)/' Makefile
 
 docker-build: ## build a docker container
-	@docker build -t python-rest .
+	@podman build -t python-rest .
 
 docker-run: ## run a docker container
-	@docker run -d -p 80:8000 python-rest
+	@podman run -d -p 80:8000 python-rest
 
 check-port80:  ## check port 80
 	@nc -vzw3 localhost 80
