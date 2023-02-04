@@ -1,7 +1,5 @@
 import json
-import re
 import os
-import sys
 import sqlite3
 # import requests
 
@@ -13,14 +11,16 @@ url_template = "http://localhost/records/%i"
 
 # the healCheck class provide a simple message telling people we are live
 class healthCheck(web.RequestHandler):
-    def get(self):
-        self.write({'message': 'yay, you reach me!!'})
+   def get(self):
+       self.write({'message': 'yay, you reach me!!'})
+
 
 class Application(web.Application):
     '''
     the custom Application class is a sub-class of web.Application. Mainly uses
     to wrap methods for accessing sqlite database
     '''
+
     def __init__(self, *args, **kwargs):
         super(Application, self).__init__(*args, **kwargs)
         self._data = None
@@ -81,8 +81,9 @@ class Application(web.Application):
 
         return row
 
-# this storeRecords class has one post method that can accept a post data from web and
-# store the upload data in a localhost /tmp directory.
+# this storeRecords class has one post method that can accept a
+# post data from web and store the upload data in a
+# localhost /tmp directory.
 class storeRecords(web.RequestHandler):
     def post(self):
         # self.data = re.sub(r'\s+', '\n', self.request.body.decode('utf-8'))
@@ -91,33 +92,37 @@ class storeRecords(web.RequestHandler):
         self.application.create_word_table()
         self.application.insert_data(data)
 
-# the getWord class will generate an unique RESTful url and return the data. The get method
-# it provided is an asynchron
+
+# the getWord class will generate an unique RESTful url and
+# return the data. The get method it provided is an asynchron
 class getWords(web.RequestHandler):
     @web.asynchronous
     def get(self, arg):
         '''
-        we make get as an asynchronus method, which means the method can accept multiple
-        request. But it won't flush the buffer. We have to call finsh manually. To support
+        we make get as an asynchronus method, which means the method can
+        accept multiple request. But it won't flush the buffer.
+        We have to call finsh manually. To support
         asynchronus, we use IOLoop, set the callback to finish method
 
-        to make a unique REST url, we add target as a parameter for get method. This each word in our
-        file becomes http://localhost:8000/words/<id>
+        to make a unique REST url, we add target as a parameter for get method.
+        This each word in our file becomes http://localhost:8000/words/<id>
         '''
 
         index = int(arg)
         word = self.application.get_word(index)
         self.write(json.dumps(word))
 
-        # make this web method become async, and call finish method when timeout
+        # make this web method become async, and call finish
+        # method when timeout
         loop = IOLoop.instance()
         loop.add_timeout(loop.time() + 0.1, self.finish)
+
 
 if __name__ == '__main__':
     # create our simple REST server
     app = Application([('/healthcheck', healthCheck),
-           ('/records', storeRecords),
-           (r'/words/(\d+)',getWords)])
+                       ('/records', storeRecords),
+                       (r'/words/(\d+)', getWords)])
     httpServer = HTTPServer(app)
     httpServer.listen(8000)
     IOLoop.instance().start()
