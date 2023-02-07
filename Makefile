@@ -26,10 +26,10 @@ run-test: upload-data ## run a python script to start multiple request against r
 	@python multi.py
 
 stop-container: ## stop a docker container
-	@podman ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs docker container stop
+	@podman ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs podman container stop
 
 clean: stop-container ## remove docker container
-	@podman ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs docker container rm
+	@podman ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs podman container rm
 
 %:
 	@echo "ignoring rule $@" >/dev/null
