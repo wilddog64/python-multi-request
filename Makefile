@@ -13,10 +13,10 @@ docker-build: ## build a docker container
 docker-run: ## run a docker container
 	@podman run -d -p 80:8000 python-rest
 
-check-port80:  ## check port 80
+check-port:  ## check port 80
 	@nc -vzw3 localhost 80
 
-healthcheck: ## run health check
+health-check: ## run health check
 	@curl http://localhost/healthcheck
 
 upload-data: healthcheck ## upload a test data
@@ -26,10 +26,10 @@ run-test: upload-data ## run a python script to start multiple request against r
 	@python multi.py
 
 stop-container: ## stop a docker container
-	@docker ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs docker container stop
+	@podman ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs docker container stop
 
 clean: stop-container ## remove docker container
-	@docker ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs docker container rm
+	@podman ps -a | grep -v 'CONTAINER' | grep python-rest | awk '{ print $$1 }' | xargs docker container rm
 
 %:
 	@echo "ignoring rule $@" >/dev/null
