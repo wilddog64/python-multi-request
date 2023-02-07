@@ -9,10 +9,11 @@ from tornado import web
 
 url_template = "http://localhost/records/%i"
 
+
 # the healCheck class provide a simple message telling people we are live
 class healthCheck(web.RequestHandler):
-   def get(self):
-       self.write({'message': 'yay, you reach me!!'})
+    def get(self):
+        self.write({'message': 'yay, you reach me!!'})
 
 
 class Application(web.Application):
@@ -48,22 +49,29 @@ class Application(web.Application):
         create a table in an sqlite database
         '''
         # create table
-        create_stmt = 'CREATE TABLE IF NOT EXISTS words(id integer primary key autoincrement, word text)'
+        create_stmt =
+        '''
+          CREATE TABLE
+           IF NOT EXISTS
+           words(id integer primary key autoincrement, word text)
+        '''
         self._cursor = self._conn.cursor()
         self._cursor.execute(create_stmt)
 
+
     def insert_data(self, data):
         '''
-        insert_data inserts data into sqlite3 database table. It wraps all inserts
-        into a transition. When fail the whole inserts are rollback.
+        insert_data inserts data into sqlite3 database table.
+        It wraps all inserts into a transition.
+        When fail the whole inserts are rollback.
         '''
         insert_stmt = 'INSERT INTO words (word) VALUES (?)'
         self._cursor = self._conn.cursor()
 
         try:
-          for r in data:
-              self._cursor.execute(insert_stmt, (r,))
-          self._conn.commit()
+            for r in data:
+                self._cursor.execute(insert_stmt, (r,))
+            self._conn.commit()
         except:
             self._conn.rollback()
             raise RuntimeError('fail to insert data')
@@ -80,6 +88,7 @@ class Application(web.Application):
         row = cursor.fetchone()
 
         return row
+
 
 # this storeRecords class has one post method that can accept a
 # post data from web and store the upload data in a
